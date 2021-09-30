@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<!-- Note: Ensure that the my_ground_plane folder is in the ~/.gazebo/models directory or replace <uri>model://my_ground_plane</uri>
+with <uri>model://ground_plane</uri>-->
+
+<sdf version="1.4">
+  <world name="default">
+    <include>
+      <uri>model://my_ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://construction_cone</uri>
+      <name>construction_cone</name>
+      <pose>-3.0 0 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://cafe_table</uri>
+      <name>cafe_table</name>
+      <pose>3.0 0 0 0 0 0</pose>
+    </include>
+    <scene>
+      <shadows>false</shadows>
+    </scene>
+  </world>
+</sdf>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro"> 
+
+    <xacro:property name="mu1" value="1.0"/>
+    <xacro:property name="mu2" value="1.0"/>
+
+    <gazebo reference="base_link">
+        <selfCollide>true</selfCollide>
+    </gazebo>
+
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/tachyon</robotNamespace>
+            <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        </plugin>
+    </gazebo>
+</robot>

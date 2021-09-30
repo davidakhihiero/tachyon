@@ -1,0 +1,18 @@
+<launch>
+    <rosparam file="$(find tachyon)/config/tachyon_control.yaml" command="load"/>
+
+    <!--Loading the controller-->
+
+    <node name="control_spawner" type="spawner" pkg="controller_manager" ns="/tachyon" output="screen" respawn="false"
+    args="joint_state_controller joint_base_to_front_left_controller joint_swing_link_to_upper_limb_front_left_controller joint_upper_limb_to_lower_limb_front_left_controller
+    joint_base_to_front_right_controller joint_swing_link_to_upper_limb_front_right_controller joint_upper_limb_to_lower_limb_front_right_controller
+    joint_base_to_back_left_controller joint_swing_link_to_upper_limb_back_left_controller joint_upper_limb_to_lower_limb_back_left_controller
+    joint_base_to_back_right_controller joint_swing_link_to_upper_limb_back_right_controller joint_upper_limb_to_lower_limb_back_right_controller"/>
+
+
+    <!-- To convert joint states to TF transforms -->
+    <node name="robot_state_publisher" type="robot_state_publisher" pkg="robot_state_publisher" output="screen" respawn="false">
+        <remap from="/joint_states" to="/tachyon/joint_states"/>
+    </node>
+
+</launch>

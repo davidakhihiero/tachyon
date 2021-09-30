@@ -1,0 +1,71 @@
+tachyon:
+  #Joint State Controller
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+
+  #Position Controllers
+  #Front Left Leg
+  joint_base_to_front_left_controller:
+    type: effort_controllers/JointPositionController
+    joint: base_link_to_front_left_leg
+    pid: {p: 1000, i: 0.02, d: 1}
+
+  joint_swing_link_to_upper_limb_front_left_controller:
+    type: effort_controllers/JointPositionController
+    joint: swing_link_to_upper_limb_link_joint_front_left
+    pid: {p: 1000, i: 0.02, d: 1}
+
+  joint_upper_limb_to_lower_limb_front_left_controller:
+    type: effort_controllers/JointPositionController
+    joint: upper_limb_link_to_lower_limb_link_joint_front_left
+    pid: {p: 1000, i: 0.02, d: 1}
+
+  #Front Right Leg
+  joint_base_to_front_right_controller:
+    type: effort_controllers/JointPositionController
+    joint: base_link_to_front_right_leg
+    pid: {p: 1000, i: 0.02, d: 1}
+
+  joint_swing_link_to_upper_limb_front_right_controller:
+    type: effort_controllers/JointPositionController
+    joint: swing_link_to_upper_limb_link_joint_front_right
+    pid: {p: 1000, i: 0.02, d: 1}
+
+  joint_upper_limb_to_lower_limb_front_right_controller:
+    type: effort_controllers/JointPositionController
+    joint: upper_limb_link_to_lower_limb_link_joint_front_right
+    pid: {p: 1000, i: 0.02, d: 1}
+
+  #Back Left Leg
+  joint_base_to_back_left_controller:
+    type: effort_controllers/JointPositionController
+    joint: base_link_to_back_left_leg
+    pid: {p: 1000, i: 0.02, d: 1}
+
+  joint_swing_link_to_upper_limb_back_left_controller:
+    type: effort_controllers/JointPositionController
+    joint: swing_link_to_upper_limb_link_joint_back_left
+    pid: {p: 1000, i: 0.02, d: 1}
+
+  joint_upper_limb_to_lower_limb_back_left_controller:
+    type: effort_controllers/JointPositionController
+    joint: upper_limb_link_to_lower_limb_link_joint_back_left
+    pid: {p: 1000, i: 0.02, d: 1}
+
+  #Back Right Leg
+  joint_base_to_back_right_controller:
+    type: effort_controllers/JointPositionController
+    joint: base_link_to_back_right_leg
+    pid: {p: 1000, i: 0.02, d: 1}
+
+  joint_swing_link_to_upper_limb_back_right_controller:
+    type: effort_controllers/JointPositionController
+    joint: swing_link_to_upper_limb_link_joint_back_right
+    pid: {p: 1000, i: 0.02, d: 1}
+
+  joint_upper_limb_to_lower_limb_back_right_controller:
+    type: effort_controllers/JointPositionController
+    joint: upper_limb_link_to_lower_limb_link_joint_back_right
+    pid: {p: 1000, i: 0.02, d: 1}
+  

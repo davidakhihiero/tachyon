@@ -1,0 +1,15 @@
+<launch>
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find tachyon)/worlds/tachyon.world"/>
+        <arg name="use_sim_time" default="true"/>
+        <arg name="headless" default="false"/>
+        <arg name="debug" default="false"/>
+        <arg name="gui" default="true"/>
+        <arg name="paused" default="false"/>
+    </include>
+
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find tachyon)/urdf/tachyon.xacro'"/>
+
+    <node name="spawn_robot_model" type="spawn_model" pkg="gazebo_ros" output="screen" respawn="false" args="-param robot_description -urdf -model tachyon"/>
+
+</launch>
