@@ -1,0 +1,4 @@
+---
+float64 distance
+float64 instantaneous_speed
+float64 average_speed

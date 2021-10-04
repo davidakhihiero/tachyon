@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-
+#  Author: David Akhihiero
 # Code to make tachyon stand 
 
 import rospy
@@ -78,7 +78,7 @@ def stand():
     rate = rospy.Rate(5)
 
     standing = False
-    while not standing and not rospy.is_shutdown():
+    while True and not rospy.is_shutdown():
 
         base_to_front_left_pub.publish(base_to_front_left_pos)
         swing_link_to_upper_limb_front_left_pub.publish(swing_link_to_upper_limb_front_left_pos)

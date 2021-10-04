@@ -1,3 +1,4 @@
+#  Author: David Akhihiero
 import numpy as np
 from math import sin, cos
 from scipy.optimize import fsolve
