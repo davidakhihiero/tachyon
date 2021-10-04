@@ -3,7 +3,7 @@
 #include <gazebo_msgs/ModelStates.h>
 #include <math.h>
 
-//  Author: David Akhihiero
+// Author: David Akhihiero
 /* Server for getting the distance travelled, instantaneous speed and average speed */
 
 float initialDistance = 0;
