@@ -6,10 +6,17 @@ import rospy
 import numpy as np
 from std_msgs.msg import Float64
 from control_msgs.msg import JointControllerState
+from tachyon.msg import JointAnglesErrorIsBelowTolerance
 from Leg import Leg
 
+is_at_desired = False
+
+def joint_angles_error_callback(msg):
+    global is_at_desired
+    is_at_desired = msg.is_at_desired
 
 def turn_left():
+    global is_at_desired
     full_step_size = 0.20
 
     base_to_front_left_pub = rospy.Publisher("/tachyon/joint_base_to_front_left_controller/command", Float64, queue_size=10)
@@ -110,12 +117,7 @@ def turn_left():
             upper_limb_to_lower_limb_back_left_pub.publish(upper_limb_to_lower_limb_back_left_pos)
 
             rate.sleep()
-            at_desired = True
-
-            for leg in legs:
-                at_desired = leg.at_desired_point()
-                if not at_desired:
-                    break
+            at_desired = is_at_desired
 
 
     while True and not rospy.is_shutdown():
@@ -181,16 +183,7 @@ def turn_left():
 
                 rate.sleep()
 
-                at_desired = True
-
-                for leg in legs:
-                    at_desired = leg.at_desired_point()
-                    if not at_desired:
-                        break
-
-                if at_desired:
-                    break
-
+                at_desired = is_at_desired
 
         steps_diagonal_pair_1 = generated_steps_for_a_step(full_step_size, True, -full_step_size / 2, True)
         x_values_1 = steps_diagonal_pair_1[0]
@@ -253,15 +246,7 @@ def turn_left():
 
                 rate.sleep()
 
-                at_desired = True
-
-                for leg in legs:
-                    at_desired = leg.at_desired_point()
-                    if not at_desired:
-                        break
-
-                if at_desired:
-                    break
+                at_desired = is_at_desired
 
        
 def generated_steps_for_a_step(full_step_distance, forward=True, x_offset=0, direction_forward=True, default_height=0.7, n_substeps=3):
@@ -301,4 +286,5 @@ def generated_steps_for_a_step(full_step_distance, forward=True, x_offset=0, dir
 if __name__ == "__main__":
     rospy.init_node("turn_left_node")
     rospy.wait_for_message("/tachyon/joint_upper_limb_to_lower_limb_back_right_controller/state", JointControllerState)
+    rospy.Subscriber("joint_angles_error_publisher", JointAnglesErrorIsBelowTolerance, joint_angles_error_callback)
     turn_left()

@@ -1,0 +1,16 @@
+float64 x
+float64 y
+float64 z
+float64 L1
+float64 H1
+float64 L2
+float64 L3
+float64 old_theta1
+float64 old_theta2
+float64 old_theta3
+float64 right
+---
+float64 theta1
+float64 theta2
+float64 theta3
+bool solution_found

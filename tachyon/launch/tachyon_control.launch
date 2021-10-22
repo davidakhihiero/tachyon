@@ -15,4 +15,10 @@
         <remap from="/joint_states" to="/tachyon/joint_states"/>
     </node>
 
+    <node name="inverse_kinematics_server" type="IK_Server.py" pkg="tachyon"/>
+
+    <node name="joint_angles_error_publisher" type="jointAnglesErrorPublisher" pkg="tachyon"/>
+    
+    
+
 </launch>

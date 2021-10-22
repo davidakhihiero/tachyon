@@ -5,10 +5,20 @@
 import rospy
 from std_msgs.msg import Float64
 from control_msgs.msg import JointControllerState
+from tachyon.msg import JointAnglesErrorIsBelowTolerance
 from Leg import Leg
 
 
+is_at_desired = False
+count = 0
+
+def joint_angles_error_callback(msg):
+    global is_at_desired
+    is_at_desired = msg.is_at_desired
+
 def stand():
+    global is_at_desired, count
+
     base_to_front_left_pub = rospy.Publisher("/tachyon/joint_base_to_front_left_controller/command", Float64, queue_size=10)
     swing_link_to_upper_limb_front_left_pub = rospy.Publisher("/tachyon/joint_swing_link_to_upper_limb_front_left_controller/command", 
     Float64, queue_size=10)
@@ -73,13 +83,10 @@ def stand():
     swing_link_to_upper_limb_back_right_pos = Float64(theta2)
     upper_limb_to_lower_limb_back_right_pos = Float64(theta3)
 
-    legs = [front_left_leg, front_right_leg, back_left_leg, back_right_leg]
-
-    rate = rospy.Rate(5)
+    rate = rospy.Rate(50)
 
     standing = False
-    while True and not rospy.is_shutdown():
-
+    while not standing and not rospy.is_shutdown(): 
         base_to_front_left_pub.publish(base_to_front_left_pos)
         swing_link_to_upper_limb_front_left_pub.publish(swing_link_to_upper_limb_front_left_pos)
         upper_limb_to_lower_limb_front_left_pub.publish(upper_limb_to_lower_limb_front_left_pos)
@@ -95,19 +102,21 @@ def stand():
         base_to_back_right_pub.publish(base_to_back_right_pos)
         swing_link_to_upper_limb_back_right_pub.publish(swing_link_to_upper_limb_back_right_pos)
         upper_limb_to_lower_limb_back_right_pub.publish(upper_limb_to_lower_limb_back_right_pos)
-
-        standing = True
-        for leg in legs:
-            standing = leg.at_desired_point()
-            if not standing:
-                break
             
         rate.sleep()
+        standing = is_at_desired
+    
+    if count < 3:
+        count += 1
+        stand()
+
+        
 
 
 if __name__ == "__main__":
     rospy.init_node("stand_node", anonymous=True)
     rospy.wait_for_message("/tachyon/joint_upper_limb_to_lower_limb_back_right_controller/state", JointControllerState)
+    rospy.Subscriber("joint_angles_error_publisher", JointAnglesErrorIsBelowTolerance, joint_angles_error_callback)
     stand()
 
 

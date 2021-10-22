@@ -6,11 +6,18 @@ import rospy
 import numpy as np
 from std_msgs.msg import Float64
 from control_msgs.msg import JointControllerState
+from tachyon.msg import JointAnglesErrorIsBelowTolerance
 from Leg import Leg
+
+is_at_desired = False
+
+def joint_angles_error_callback(msg):
+    global is_at_desired
+    is_at_desired = msg.is_at_desired
 
 
 def creep():
-
+    global is_at_desired
     full_step_size = 0.25
 
     base_to_front_left_pub = rospy.Publisher("/tachyon/joint_base_to_front_left_controller/command", Float64, queue_size=10)
@@ -46,7 +53,7 @@ def creep():
 
     
 
-    rate = rospy.Rate(5)
+    rate = rospy.Rate(50)
 
     # first move diagonal pair (1) forward half a step
     # then move diagonal pair (2) forward a full step, then (1) a full step in a loop
@@ -113,13 +120,7 @@ def creep():
 
             rate.sleep()
 
-            at_desired = True
-
-            for leg in legs:
-                at_desired = leg.at_desired_point()
-                if not at_desired:
-                    break
-
+            at_desired = is_at_desired
 
     while True and not rospy.is_shutdown():
 
@@ -184,12 +185,7 @@ def creep():
 
                 rate.sleep()
 
-                at_desired = True
-
-                for leg in legs:
-                    at_desired = leg.at_desired_point()
-                    if not at_desired:
-                        break
+                at_desired = is_at_desired
 
 
         steps_left_pair = generated_steps_for_a_step(full_step_size, True, -full_step_size / 2, True)
@@ -253,12 +249,7 @@ def creep():
 
                 rate.sleep()
 
-                at_desired = True
-
-                for leg in legs:
-                    at_desired = leg.at_desired_point()
-                    if not at_desired:
-                        break
+                at_desired = is_at_desired
 
     
 def generated_steps_for_a_step(full_step_distance, forward=True, x_offset=0, direction_forward=True, default_height=0.7, n_substeps=1):
@@ -298,4 +289,5 @@ def generated_steps_for_a_step(full_step_distance, forward=True, x_offset=0, dir
 if __name__ == "__main__":
     rospy.init_node("creep_node", anonymous=True)
     rospy.wait_for_message("/tachyon/joint_upper_limb_to_lower_limb_back_left_controller/state", JointControllerState)
+    rospy.Subscriber("joint_angles_error_publisher", JointAnglesErrorIsBelowTolerance, joint_angles_error_callback)
     creep()

@@ -2,7 +2,7 @@ tachyon:
   #Joint State Controller
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 50
+    publish_rate: 100
 
   #Position Controllers
   #Front Left Leg

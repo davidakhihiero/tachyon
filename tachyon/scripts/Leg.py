@@ -16,26 +16,7 @@ class Leg:
         self.theta1 = 0
         self.theta2 = 0
         self.theta3 = 0
-        self.theta1_error = 0
-        self.theta2_error = 0
-        self.theta3_error = 0
-        self.allowed_error = 0.03
-
-        # Subscriber objects to monitor the error in the joint positions
-        rospy.Subscriber("/tachyon/joint_base_to_" + self.name + "_controller/state", JointControllerState, self.body_to_swing_callback)
-        rospy.Subscriber("/tachyon/joint_swing_link_to_upper_limb_" + self.name + "_controller/state", JointControllerState, self.swing_to_upper_callback)
-        rospy.Subscriber("/tachyon/joint_upper_limb_to_lower_limb_" + self.name + "_controller/state", JointControllerState, self.upper_to_lower_callback)
-
-    def body_to_swing_callback(self, msg):
-        self.theta1_error = msg.error
-
-    def swing_to_upper_callback(self, msg):
-        self.theta2_error = msg.error
-    
-    def upper_to_lower_callback(self, msg):
-        self.theta3_error = msg.error
-
-
+       
     def get_joint_angles(self, x, y, z):
         # Method to compute the inverse kinematics of the leg
         def equations(thetas):
@@ -72,7 +53,3 @@ class Leg:
         self.theta3 = joint_angles[2] * self.right
 
         return joint_angles, True if all(np.isclose(equations(solution), [0, 0, 0])) else False
-
-    def at_desired_point(self):
-        # Method to check if the errors in the joint positions are below an accepted threshold (allowed_error)
-        return all(list(map(lambda x: True if abs(x) < self.allowed_error else False, [self.theta1_error, self.theta2_error, self.theta3_error])))

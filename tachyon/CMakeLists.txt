@@ -53,16 +53,16 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+   FILES
+   JointAnglesErrorIsBelowTolerance.msg
+ )
 
 ## Generate services in the 'srv' folder
 add_service_files(
    FILES
    TachyonDistanceAndSpeed.srv
+   IK.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -121,7 +121,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -184,11 +184,11 @@ include_directories(
 # )
 
 ## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+ install(DIRECTORY include/${PROJECT_NAME}/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h"
+   PATTERN ".svn" EXCLUDE
+ )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
@@ -213,3 +213,18 @@ include_directories(
 add_executable(tachyon_distance_and_speed src/tachyon_distance_and_speed.cpp)
 target_link_libraries(tachyon_distance_and_speed ${catkin_LIBRARIES})
 add_dependencies(tachyon_distance_and_speed tachyon_gencpp)
+
+add_executable(jointAnglesErrorPublisher src/jointAnglesErrorPublisher.cpp)
+target_link_libraries(jointAnglesErrorPublisher ${catkin_LIBRARIES})
+add_dependencies(jointAnglesErrorPublisher tachyon_gencpp)
+
+
+add_executable(stand src/stand.cpp src/Leg.cpp)
+target_link_libraries(stand ${catkin_LIBRARIES})
+add_dependencies(stand tachyon_gencpp)
+
+add_executable(creep src/creep.cpp src/Leg.cpp)
+target_link_libraries(creep ${catkin_LIBRARIES})
+add_dependencies(creep tachyon_gencpp)
+
+
