@@ -227,4 +227,16 @@ add_executable(creep src/creep.cpp src/Leg.cpp)
 target_link_libraries(creep ${catkin_LIBRARIES})
 add_dependencies(creep tachyon_gencpp)
 
+add_executable(test_limb src/test_limb.cpp src/Leg.cpp)
+target_link_libraries(test_limb ${catkin_LIBRARIES})
+add_dependencies(test_limb tachyon_gencpp)
+
+add_executable(trot src/trot.cpp src/Leg.cpp src/generateSteps.cpp)
+target_link_libraries(trot ${catkin_LIBRARIES})
+add_dependencies(trot tachyon_gencpp)
+
+add_executable(turnLeft src/turnLeft.cpp src/Leg.cpp src/generateSteps.cpp)
+target_link_libraries(turnLeft ${catkin_LIBRARIES})
+add_dependencies(turnLeft tachyon_gencpp)
+
 

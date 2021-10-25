@@ -31,8 +31,6 @@ def creep():
     back_right_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'back_right', True)
     front_left_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'front_left', False)
 
-    legs = [front_right_leg, front_left_leg, back_right_leg, back_left_leg]
-
     base_to_front_right_pub = rospy.Publisher("/tachyon/joint_base_to_front_right_controller/command", Float64, queue_size=10)
     swing_link_to_upper_limb_front_right_pub = rospy.Publisher("/tachyon/joint_swing_link_to_upper_limb_front_right_controller/command", 
     Float64, queue_size=10)

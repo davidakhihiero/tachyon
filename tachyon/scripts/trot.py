@@ -30,8 +30,6 @@ def trot():
     back_right_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'back_right', True)
     front_left_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'front_left', False)
 
-    legs = [front_right_leg, front_left_leg, back_right_leg, back_left_leg]
-
     base_to_front_right_pub = rospy.Publisher("/tachyon/joint_base_to_front_right_controller/command", Float64, queue_size=10)
     swing_link_to_upper_limb_front_right_pub = rospy.Publisher("/tachyon/joint_swing_link_to_upper_limb_front_right_controller/command", 
     Float64, queue_size=10)
@@ -53,8 +51,8 @@ def trot():
     
     rate = rospy.Rate(50)
 
-    # first move diagonal pair (1) forward half a step
-    # then move diagonal pair (2) forward a full step, then (1) a full step in a loop
+    # first move diagonal pair (1) forward half a step, (2) backward half a step
+    # then move diagonal pair (2) forward a full step, then (1) backward a full step then the reverse, in a loop
 
     steps_diagonal_pair_1 = generated_steps_for_a_step(full_step_size / 2, True, 0, True)
     x_values_1 = steps_diagonal_pair_1[0] 

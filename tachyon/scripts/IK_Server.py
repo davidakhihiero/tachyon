@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # Author: David Akhihiero
 import numpy as np
+from math import sin, cos
 from scipy.optimize import fsolve
 import rospy
 from tachyon.srv import IK
@@ -12,9 +13,9 @@ def get_joint_angles(x, y, z, L1, H1, L2, L3, thetas, right=1):
         # Method to compute the inverse kinematics of the leg
         def equations(thetas):
             theta1, theta2, theta3 = thetas
-            eq1 = L2 * np.sin(theta2) + L3 * np.cos(theta2) * np.sin(theta3) + L3 * np.cos(theta3) * np.sin(theta2) - x
-            eq2 = L3 * np.cos(theta1) * np.sin(theta2) * np.sin(theta3) - L1 * np.sin(theta1) - L2 * np.cos(theta1) * np.cos(theta2) - L3 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) - H1 * np.cos(theta1) - y
-            eq3 = L1 * np.cos(theta1) - H1 * np.sin(theta1) - L2 * np.cos(theta2) * np.sin(theta1) - L3 * np.cos(theta2) * np.cos(theta3) * np.sin(theta1) + L3 * np.sin(theta1) * np.sin(theta2) * np.sin(theta3) - z
+            eq1 = L2 * sin(theta2) + L3 * cos(theta2) * sin(theta3) + L3 * cos(theta3) * sin(theta2) - x
+            eq2 = L3 * cos(theta1) * sin(theta2) * sin(theta3) - L1 * sin(theta1) - L2 * cos(theta1) * cos(theta2) - L3 * cos(theta1) * cos(theta2) * cos(theta3) - H1 * cos(theta1) - y
+            eq3 = L1 * cos(theta1) - H1 * sin(theta1) - L2 * cos(theta2) * sin(theta1) - L3 * cos(theta2) * cos(theta3) * sin(theta1) + L3 * sin(theta1) * sin(theta2) * sin(theta3) - z
             return [eq1, eq2, eq3]
 
         solution = fsolve(equations, np.array(thetas))
@@ -39,6 +40,8 @@ def handle_ik_request(req):
     L1, H1, L2, L3 = req.L1, req.H1, req.L2, req.L3
     thetas = [[req.old_theta1], [req.old_theta2], [req.old_theta3]]
     right = req.right
+
+    x *= -1 # The X+ axis is in the opposite direction to the X+ for tachyon when using the Cpp nodes
 
     new_thetas, solution_found = get_joint_angles(x, y, z, L1, H1, L2, L3, thetas, right)
     response = IKResponse()

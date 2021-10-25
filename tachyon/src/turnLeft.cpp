@@ -1,6 +1,6 @@
 // Author: David Akhihiero
 
-// Cpp Code to make tachyon creep 
+// Cpp Code to make tachyon turn left 
 
 #include <ros/ros.h>
 #include <math.h>
@@ -8,6 +8,7 @@
 #include <control_msgs/JointControllerState.h>
 #include <tachyon/JointAnglesErrorIsBelowTolerance.h>
 #include "Leg.h"
+#include "generateSteps.h"
 
 bool isAtDesired = false;
 int count = 0;
@@ -18,10 +19,10 @@ void jointAnglesErrorCallback(const tachyon::JointAnglesErrorIsBelowTolerance::C
     isAtDesired = msg->is_at_desired;
 }
 
-void creep()
+void turnLeft()
 {
     ros::NodeHandle nh;
-    float fullStepSize = 0.25;
+    float fullStepSize = 0.20;
 
     Leg frontLeftLeg(L1, H1, L2, L3, "front_left", false);
     Leg frontRightLeg(L1, H1, L2, L3, "front_right", true);
@@ -69,37 +70,48 @@ void creep()
 
     ros::Rate rate(20);
 
-    std::array<float, 3> xValsLeft = {0, fullStepSize / 2, fullStepSize / 2};
-    std::array<float, 3> yValsLeft = {-0.7, -0.7, -0.7};
+    // first move diagonal pair (1) forward half a step, (2) backward half a step
+    // then move diagonal pair (2) forward a full step, then (1) backward a full step then the reverse, in a loop
 
-    std::array<float, 3> xValsRight = {0, -fullStepSize / 2, -fullStepSize / 2};
-    std::array<float, 3> yValsRight = {-0.7, -0.7, -0.7};
+    int nSubsteps = 3;
 
-    int size = sizeof(xValsLeft) / sizeof(xValsLeft[0]);
+    std::array<std::array<float, 4>, 2> stepsDiagPair1 = genSteps(fullStepSize / 2, true, 0, true);
+    float xOffset1 = stepsDiagPair1[0][3];
+    std::array<std::array<float, 4>, 2> stepsDiagPair2 = genSteps(fullStepSize / 2, false, 0, true);
+    float xOffset2 = stepsDiagPair2[0][3];
+
+    std::array<float, 4> xVals1 = stepsDiagPair1[0];
+    std::array<float, 4> yVals1 = stepsDiagPair1[1];
+
+    std::array<float, 4> xVals2 = stepsDiagPair2[0];
+    std::array<float, 4> yVals2 = stepsDiagPair2[1];
+
+
+    int size = sizeof(xVals1) / sizeof(xVals1[0]);
     for (int i = 0;i < size;i++)
     {
-        std::array<float, 3> angles = frontLeftLeg.getJointAngles(xValsLeft[i], yValsLeft[i], L1);
+        std::array<float, 3> angles = frontLeftLeg.getJointAngles(-xVals1[i], yVals1[i], L1);
         float theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
         baseToFrontLeftPos.data = theta1;
         swingLinkToUpperLimbFrontLeftPos.data = theta2;
         upperLimbToLowerLimbFrontLeftPos.data = theta3;
 
-        angles = backLeftLeg.getJointAngles(xValsLeft[i], yValsLeft[i], L1);
+        angles = backLeftLeg.getJointAngles(-xVals2[i], yVals2[i], L1);
         theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
         baseToBackLeftPos.data = theta1;
         swingLinkToUpperLimbBackLeftPos.data = theta2;
         upperLimbToLowerLimbBackLeftPos.data = theta3;
 
-        angles = frontRightLeg.getJointAngles(xValsRight[i], yValsRight[i], L1);
+        angles = frontRightLeg.getJointAngles(xVals2[i], yVals2[i], L1);
         theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
         baseToFrontRightPos.data = theta1;
         swingLinkToUpperLimbFrontRightPos.data = theta2;
         upperLimbToLowerLimbFrontRightPos.data = theta3;
 
-        angles = backRightLeg.getJointAngles(xValsRight[i], yValsRight[i], L1);
+        angles = backRightLeg.getJointAngles(xVals1[i], yVals1[i], L1);
         theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
         baseToBackRightPos.data = theta1;
@@ -114,6 +126,10 @@ void creep()
             swingLinkToUpperLimbFrontLeftPub.publish(swingLinkToUpperLimbFrontLeftPos);
             upperLimbToLowerLimbFrontLeftPub.publish(upperLimbToLowerLimbFrontLeftPos);
 
+            baseToBackRightPub.publish(baseToBackRightPos);
+            swingLinkToUpperLimbBackRightPub.publish(swingLinkToUpperLimbBackRightPos);
+            upperLimbToLowerLimbBackRightPub.publish(upperLimbToLowerLimbBackRightPos);
+
             baseToFrontRightPub.publish(baseToFrontRightPos);
             swingLinkToUpperLimbFrontRightPub.publish(swingLinkToUpperLimbFrontRightPos);
             upperLimbToLowerLimbFrontRightPub.publish(upperLimbToLowerLimbFrontRightPos);
@@ -121,10 +137,7 @@ void creep()
             baseToBackLeftPub.publish(baseToBackLeftPos);
             swingLinkToUpperLimbBackLeftPub.publish(swingLinkToUpperLimbBackLeftPos);
             upperLimbToLowerLimbBackLeftPub.publish(upperLimbToLowerLimbBackLeftPos);
-
-            baseToBackRightPub.publish(baseToBackRightPos);
-            swingLinkToUpperLimbBackRightPub.publish(swingLinkToUpperLimbBackRightPos);
-            upperLimbToLowerLimbBackRightPub.publish(upperLimbToLowerLimbBackRightPos);
+            
             ros::spinOnce();
             rate.sleep();
 
@@ -136,37 +149,40 @@ void creep()
     while (true && ros::ok())
     {
         // First phase of motion
-        xValsLeft = {fullStepSize / 2, 0, -fullStepSize / 2};
-        yValsLeft = {-0.7, -0.7, -0.7};
+        stepsDiagPair1 = genSteps(fullStepSize, false, xOffset1, true);
+        stepsDiagPair2 = genSteps(fullStepSize, true, xOffset2, true);
 
-        xValsRight = {-fullStepSize / 2, 0, fullStepSize / 2};
-        yValsRight = {-0.7, -0.5, -0.7};
+        xVals1 = stepsDiagPair1[0];
+        yVals1 = stepsDiagPair1[1];
 
-        int size = sizeof(xValsLeft) / sizeof(xValsLeft[0]);
+        xVals2 = stepsDiagPair2[0];
+        yVals2 = stepsDiagPair2[1];
+
+        int size = sizeof(xVals1) / sizeof(xVals1[0]);
         for (int i = 0;i < size;i++)
         {
-            std::array<float, 3> angles = frontLeftLeg.getJointAngles(xValsLeft[i], yValsLeft[i], L1);
+            std::array<float, 3> angles = frontLeftLeg.getJointAngles(-xVals1[i], yVals1[i], L1);
             float theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
             baseToFrontLeftPos.data = theta1;
             swingLinkToUpperLimbFrontLeftPos.data = theta2;
             upperLimbToLowerLimbFrontLeftPos.data = theta3;
 
-            angles = backLeftLeg.getJointAngles(xValsLeft[i], yValsLeft[i], L1);
+            angles = backLeftLeg.getJointAngles(-xVals2[i], yVals2[i], L1);
             theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
             baseToBackLeftPos.data = theta1;
             swingLinkToUpperLimbBackLeftPos.data = theta2;
             upperLimbToLowerLimbBackLeftPos.data = theta3;
 
-            angles = frontRightLeg.getJointAngles(xValsRight[i], yValsRight[i], L1);
+            angles = frontRightLeg.getJointAngles(xVals2[i], yVals2[i], L1);
             theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
             baseToFrontRightPos.data = theta1;
             swingLinkToUpperLimbFrontRightPos.data = theta2;
             upperLimbToLowerLimbFrontRightPos.data = theta3;
 
-            angles = backRightLeg.getJointAngles(xValsRight[i], yValsRight[i], L1);
+            angles = backRightLeg.getJointAngles(xVals1[i], yVals1[i], L1);
             theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
             baseToBackRightPos.data = theta1;
@@ -181,6 +197,10 @@ void creep()
                 swingLinkToUpperLimbFrontLeftPub.publish(swingLinkToUpperLimbFrontLeftPos);
                 upperLimbToLowerLimbFrontLeftPub.publish(upperLimbToLowerLimbFrontLeftPos);
 
+                baseToBackRightPub.publish(baseToBackRightPos);
+                swingLinkToUpperLimbBackRightPub.publish(swingLinkToUpperLimbBackRightPos);
+                upperLimbToLowerLimbBackRightPub.publish(upperLimbToLowerLimbBackRightPos);
+
                 baseToFrontRightPub.publish(baseToFrontRightPos);
                 swingLinkToUpperLimbFrontRightPub.publish(swingLinkToUpperLimbFrontRightPos);
                 upperLimbToLowerLimbFrontRightPub.publish(upperLimbToLowerLimbFrontRightPos);
@@ -188,10 +208,7 @@ void creep()
                 baseToBackLeftPub.publish(baseToBackLeftPos);
                 swingLinkToUpperLimbBackLeftPub.publish(swingLinkToUpperLimbBackLeftPos);
                 upperLimbToLowerLimbBackLeftPub.publish(upperLimbToLowerLimbBackLeftPos);
-
-                baseToBackRightPub.publish(baseToBackRightPos);
-                swingLinkToUpperLimbBackRightPub.publish(swingLinkToUpperLimbBackRightPos);
-                upperLimbToLowerLimbBackRightPub.publish(upperLimbToLowerLimbBackRightPos);
+                
                 ros::spinOnce();
                 rate.sleep();
 
@@ -200,37 +217,40 @@ void creep()
         }
 
         // Second phase of motion
-        xValsLeft = {-fullStepSize / 2, fullStepSize / 2};
-        yValsLeft = {-0.7, -0.5, -0.7};
+        stepsDiagPair1 = genSteps(fullStepSize, true, xOffset2, true);
+        stepsDiagPair2 = genSteps(fullStepSize, false, xOffset1, true);
 
-        xValsRight = {fullStepSize / 2, -fullStepSize / 2};
-        yValsRight = {-0.7, -0.7, -0.7};
+        xVals1 = stepsDiagPair1[0];
+        yVals1 = stepsDiagPair1[1];
 
-        size = sizeof(xValsLeft) / sizeof(xValsLeft[0]);
+        xVals2 = stepsDiagPair2[0];
+        yVals2 = stepsDiagPair2[1];
+
+        size = sizeof(xVals1) / sizeof(xVals1[0]);
         for (int i = 0;i < size;i++)
         {
-            std::array<float, 3> angles = frontLeftLeg.getJointAngles(xValsLeft[i], yValsLeft[i], L1);
+            std::array<float, 3> angles = frontLeftLeg.getJointAngles(-xVals1[i], yVals1[i], L1);
             float theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
             baseToFrontLeftPos.data = theta1;
             swingLinkToUpperLimbFrontLeftPos.data = theta2;
             upperLimbToLowerLimbFrontLeftPos.data = theta3;
 
-            angles = backLeftLeg.getJointAngles(xValsLeft[i], yValsLeft[i], L1);
+            angles = backLeftLeg.getJointAngles(-xVals2[i], yVals2[i], L1);
             theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
             baseToBackLeftPos.data = theta1;
             swingLinkToUpperLimbBackLeftPos.data = theta2;
             upperLimbToLowerLimbBackLeftPos.data = theta3;
 
-            angles = frontRightLeg.getJointAngles(xValsRight[i], yValsRight[i], L1);
+            angles = frontRightLeg.getJointAngles(xVals2[i], yVals2[i], L1);
             theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
             baseToFrontRightPos.data = theta1;
             swingLinkToUpperLimbFrontRightPos.data = theta2;
             upperLimbToLowerLimbFrontRightPos.data = theta3;
 
-            angles = backRightLeg.getJointAngles(xValsRight[i], yValsRight[i], L1);
+            angles = backRightLeg.getJointAngles(xVals1[i], yVals1[i], L1);
             theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
             baseToBackRightPos.data = theta1;
@@ -245,6 +265,10 @@ void creep()
                 swingLinkToUpperLimbFrontLeftPub.publish(swingLinkToUpperLimbFrontLeftPos);
                 upperLimbToLowerLimbFrontLeftPub.publish(upperLimbToLowerLimbFrontLeftPos);
 
+                baseToBackRightPub.publish(baseToBackRightPos);
+                swingLinkToUpperLimbBackRightPub.publish(swingLinkToUpperLimbBackRightPos);
+                upperLimbToLowerLimbBackRightPub.publish(upperLimbToLowerLimbBackRightPos);
+
                 baseToFrontRightPub.publish(baseToFrontRightPos);
                 swingLinkToUpperLimbFrontRightPub.publish(swingLinkToUpperLimbFrontRightPos);
                 upperLimbToLowerLimbFrontRightPub.publish(upperLimbToLowerLimbFrontRightPos);
@@ -252,10 +276,7 @@ void creep()
                 baseToBackLeftPub.publish(baseToBackLeftPos);
                 swingLinkToUpperLimbBackLeftPub.publish(swingLinkToUpperLimbBackLeftPos);
                 upperLimbToLowerLimbBackLeftPub.publish(upperLimbToLowerLimbBackLeftPos);
-
-                baseToBackRightPub.publish(baseToBackRightPos);
-                swingLinkToUpperLimbBackRightPub.publish(swingLinkToUpperLimbBackRightPos);
-                upperLimbToLowerLimbBackRightPub.publish(upperLimbToLowerLimbBackRightPos);
+                
                 ros::spinOnce();
                 rate.sleep();
 
@@ -268,7 +289,7 @@ void creep()
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "creep_node_cpp");
+    ros::init(argc, argv, "turn_left_node_cpp");
     ros::NodeHandle nh;
 
     const std::string msg = "/tachyon/joint_upper_limb_to_lower_limb_back_right_controller/state";
@@ -279,7 +300,7 @@ int main(int argc, char** argv)
 
     ros::spinOnce();
 
-    creep();
+    turnLeft();
 
 }
 
