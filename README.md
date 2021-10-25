@@ -35,7 +35,7 @@ tachyon_distance_and_speed_server nodes.
 1. Start the gazebo launch file: **roslaunch tachyon tachyon_gazebo.launch** 
 2. Start the controller: **roslaunch tachyon tachyon_control.launch**
 3. Set tachyon in stance: **rosrun tachyon stand (or rosrun tachyon stand.py)**
-4. Get tachyon to creep, trot or turn left:
+4. Get tachyon to creep, trot or turn left:  
 **rosrun tachyon creep (or rosrun tachyon creep.py)**  
 **rosrun tachyon trot (or rosrun tachyon trot.py)**  
 **rosrun tachyon turnLeft (rosrun tachyon turn_left.py)**
