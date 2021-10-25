@@ -1,6 +1,6 @@
 // Author: David Akhihiero
 
-// Cpp Code to make tachyon test_limb 
+// Cpp Code for testing leg inverse kinematics
 
 #include <ros/ros.h>
 #include <math.h>
