@@ -40,7 +40,7 @@ tachyon_distance_and_speed_server nodes.
 **rosrun tachyon trot (or rosrun tachyon trot.py)**  
 **rosrun tachyon turnLeft (rosrun tachyon turn_left.py)**
 
-5. Feel free to create more interesting features :)
+Feel free to create more interesting features :)
 
 
 
