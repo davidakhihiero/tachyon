@@ -42,7 +42,7 @@ std::array<float, 3> Leg::getJointAngles(float x, float y, float z)
         ROS_ERROR("Failed to call IK service");
     }
     // Reverse joint angle inversion (inversion done by IK Server)
-    this->theta1 = jointAngles[0], this->theta2 = jointAngles[1] * this->right, this->theta3 = jointAngles[2] * this->right;
+    this->theta1 = jointAngles[0], this->theta2 = jointAngles[1], this->theta3 = jointAngles[2];
     
     return jointAngles;
 }

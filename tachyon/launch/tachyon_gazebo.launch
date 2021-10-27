@@ -5,10 +5,10 @@
         <arg name="headless" default="false"/>
         <arg name="debug" default="false"/>
         <arg name="gui" default="true"/>
-        <arg name="paused" default="false"/>
+        <arg name="paused" default="true"/>
     </include>
 
-    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find tachyon)/urdf/tachyon.xacro'"/>
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find tachyon)/urdf/tachyon2.xacro'"/>
 
     <node name="spawn_robot_model" type="spawn_model" pkg="gazebo_ros" output="screen" respawn="false" args="-param robot_description -urdf -model tachyon"/>
 

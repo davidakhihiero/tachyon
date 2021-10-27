@@ -1,0 +1,844 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-1-g15f4949  Build Version: 1.6.7594.29634
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+
+<!-- A QUADRUPED NAMED TACHYON. I just like that name :) -->
+
+<robot name="tachyon" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Lower and upper limits for the shoulder, upper limb and lower limb joints -->
+  <xacro:property name="lower_shoulder" value="-0.90"/>
+  <xacro:property name="upper_shoulder" value="0.90"/>
+  <xacro:property name="lower_upper_limb" value="-2.06"/>
+  <xacro:property name="upper_upper_limb" value="2.06"/>
+  <xacro:property name="lower_lower_limb" value="-2.06"/>
+  <xacro:property name="upper_lower_limb" value="2.06"/>
+
+  <xacro:include filename="$(find tachyon)/urdf/tachyon.gazebo"/>
+
+  <xacro:property name="damp" value="0.3"/>
+  <xacro:property name="friction" value="0.01"/>
+  <xacro:property name="velocity" value="0.5"/>
+  <xacro:property name="effort" value="1000"/>
+  <xacro:property name="mu1" value="0.7"/>
+  <xacro:property name="mu2" value="0.7"/>
+
+  <xacro:macro name="default_transmission" params="name joint_name">
+    <transmission name="transmission_for_${name}">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${joint_name}">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+
+        <actuator name="motor_for_${name}">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+
+    </transmission>
+  </xacro:macro>
+
+  <!-- Base Link -->
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0090441 -0.0017763 1"
+        rpy="0 0 0" />
+      <mass
+        value="12.824" />
+      <inertia
+        ixx="0.28319"
+        ixy="-0.0019487"
+        ixz="-1.2976E-06"
+        iyy="1.3553"
+        iyz="5.0637E-07"
+        izz="1.4985" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 1"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 1"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="1 0.4 0.2"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Front Left Limb -->
+  <link
+    name="swing_link_front_left">
+    <inertial>
+      <origin
+        xyz="-0.0500000000000007 -0.0270678226112841 1.40574217782001E-15"
+        rpy="0 0 0" />
+      <mass
+        value="0.414191236384345" />
+      <inertia
+        ixx="0.00039937576193217"
+        ixy="-3.32555452602677E-19"
+        ixz="7.15908570969894E-23"
+        iyy="0.000597919401912998"
+        iyz="-8.08379642835925E-21"
+        izz="0.000452984578307331" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/swing_link_front_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="base_link_to_front_left_leg"
+    type="revolute">
+    <origin
+      xyz="0.245526363586769 0.162876303538725 1"
+      rpy="0 0 -3.14159265358979" />
+    <parent
+      link="base_link" />
+    <child
+      link="swing_link_front_left" />
+    <axis
+      xyz="1 0 0" />
+      <limit effort="${effort}" lower="${lower_shoulder}" upper="${upper_shoulder}" velocity="${velocity}"/>
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <link
+    name="upper_limb_link_front_left">
+    <inertial>
+      <origin
+        xyz="-0.010966171906638 0.0499999747659611 -0.195723156478282"
+        rpy="0 0 0" />
+      <mass
+        value="1.95817516519427" />
+      <inertia
+        ixx="0.0258175996818492"
+        ixy="-3.84178471724602E-08"
+        ixz="-0.00120773015606982"
+        iyy="0.0255051336123879"
+        iyz="-9.74340791236995E-10"
+        izz="0.00494126700774013" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/upper_limb_link_front_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0.05 -0.2"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="swing_link_to_upper_limb_link_joint_front_left"
+    type="revolute">
+    <origin
+      xyz="-0.0499999999999999 -0.049997734345438 0"
+      rpy="0 0 3.14159265358979" />
+    <parent
+      link="swing_link_front_left" />
+    <child
+      link="upper_limb_link_front_left" />
+    <axis
+      xyz="0 1 0" />
+      <limit
+      lower="${lower_upper_limb}"
+      upper="${upper_upper_limb}"
+      effort="${effort}"
+      velocity="${velocity}" />
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <link
+    name="lower_limb_link_front_left">
+    <inertial>
+      <origin
+        xyz="0.00525347694550699 0.0350021540283263 -0.1897008983798"
+        rpy="0 0 0" />
+      <mass
+        value="1.10507308028095" />
+      <inertia
+        ixx="0.0232214605443888"
+        ixy="2.77735685257532E-08"
+        ixz="-0.000405908720123269"
+        iyy="0.0234825758483115"
+        iyz="-1.3717004284145E-07"
+        izz="0.00116342257277221" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/lower_limb_link_front_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0.05 -0.2"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="upper_limb_link_to_lower_limb_link_joint_front_left"
+    type="revolute">
+    <origin
+      xyz="-0.00273365306192419 0.0150000000000008 -0.403460545677345"
+      rpy="0 0 0" />
+    <parent
+      link="upper_limb_link_front_left" />
+    <child
+      link="lower_limb_link_front_left" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="${lower_lower_limb}"
+      upper="${upper_lower_limb}"
+      effort="${effort}"
+      velocity="${velocity}" />
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <!-- Front Right Limb -->
+  <link
+    name="swing_link_front_right">
+    <inertial>
+      <origin
+        xyz="0.05 -0.027067822611284 -1.42717924174675E-15"
+        rpy="0 0 0" />
+      <mass
+        value="0.414191236384345" />
+      <inertia
+        ixx="0.00039937576193217"
+        ixy="-1.52495900169695E-20"
+        ixz="-8.03399169942128E-21"
+        iyy="0.000597919401912998"
+        iyz="1.79321795069259E-20"
+        izz="0.000452984578307331" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/swing_link_front_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="base_link_to_front_right_leg"
+    type="revolute">
+    <origin
+      xyz="0.245526363586771 -0.167123696461276 1"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="swing_link_front_right" />
+    <axis
+      xyz="1 0 0" />
+      <limit effort="${effort}" lower="${lower_shoulder}" upper="${upper_shoulder}" velocity="${velocity}"/>
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <link
+    name="upper_limb_link_front_right">
+    <inertial>
+      <origin
+        xyz="-0.0109661719066364 -0.0500000252340397 -0.195723156478285"
+        rpy="0 0 0" />
+      <mass
+        value="1.95817516519428" />
+      <inertia
+        ixx="0.0258175996818492"
+        ixy="-3.84178471717061E-08"
+        ixz="-0.00120773015606981"
+        iyy="0.0255051336123879"
+        iyz="-9.7434079184995E-10"
+        izz="0.00494126700774015" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/upper_limb_link_front_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 -0.05 -0.2"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="swing_link_to_upper_limb_link_joint_front_right"
+    type="revolute">
+    <origin
+      xyz="0.05 -0.0499977343454362 0"
+      rpy="0 0 0" />
+    <parent
+      link="swing_link_front_right" />
+    <child
+      link="upper_limb_link_front_right" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="${lower_upper_limb}"
+      upper="${upper_upper_limb}"
+      effort="${effort}"
+      velocity="${velocity}" />
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <link
+    name="lower_limb_link_front_right">
+    <inertial>
+      <origin
+        xyz="0.00525347694550743 -0.0349978459716738 -0.1897008983798"
+        rpy="0 0 0" />
+      <mass
+        value="1.10507308028094" />
+      <inertia
+        ixx="0.0232214605443887"
+        ixy="2.77735685256535E-08"
+        ixz="-0.000405908720123268"
+        iyy="0.0234825758483114"
+        iyz="-1.37170042841387E-07"
+        izz="0.00116342257277221" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/lower_limb_link_front_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 -0.05 -0.2"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="upper_limb_link_to_lower_limb_link_joint_front_right"
+    type="revolute">
+    <origin
+      xyz="-0.00273365306192319 -0.015 -0.403460545677348"
+      rpy="0 0 0" />
+    <parent
+      link="upper_limb_link_front_right" />
+    <child
+      link="lower_limb_link_front_right" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="${lower_lower_limb}"
+      upper="${upper_lower_limb}"
+      effort="${effort}"
+      velocity="${velocity}" />
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <!-- Back Right Limb -->
+  <link
+    name="swing_link_back_right">
+    <inertial>
+      <origin
+        xyz="-0.05 -0.0270678226112841 -1.40680606241962E-15"
+        rpy="0 0 0" />
+      <mass
+        value="0.414191236384345" />
+      <inertia
+        ixx="0.00039937576193217"
+        ixy="-1.52773727632641E-20"
+        ixz="-9.81759989523875E-21"
+        iyy="0.000597919401912998"
+        iyz="1.95455342462541E-20"
+        izz="0.000452984578307331" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/swing_link_back_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="base_link_to_back_right_leg"
+    type="revolute">
+    <origin
+      xyz="-0.249773756509325 -0.167123696461276 1"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="swing_link_back_right" />
+    <axis
+      xyz="1 0 0" />
+      <limit effort="${effort}" lower="${lower_shoulder}" upper="${upper_shoulder}" velocity="${velocity}"/>
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <link
+    name="upper_limb_link_back_right">
+    <inertial>
+      <origin
+        xyz="-0.0109661719066364 -0.0500000252340398 -0.195723156478284"
+        rpy="0 0 0" />
+      <mass
+        value="1.95817516519427" />
+      <inertia
+        ixx="0.0258175996818492"
+        ixy="-3.84178471723798E-08"
+        ixz="-0.00120773015606981"
+        iyy="0.0255051336123879"
+        iyz="-9.7434079393868E-10"
+        izz="0.00494126700774013" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/upper_limb_link_back_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 -0.05 -0.2"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="swing_link_to_upper_limb_link_joint_back_right"
+    type="revolute">
+    <origin
+      xyz="-0.05 -0.0499977343454403 0"
+      rpy="0 0 0" />
+    <parent
+      link="swing_link_back_right" />
+    <child
+      link="upper_limb_link_back_right" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="${lower_upper_limb}"
+      upper="${upper_upper_limb}"
+      effort="${effort}"
+      velocity="${velocity}" />
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <link
+    name="lower_limb_link_back_right">
+    <inertial>
+      <origin
+        xyz="0.00525347694550743 -0.0349978459716738 -0.1897008983798"
+        rpy="0 0 0" />
+      <mass
+        value="1.10507308028094" />
+      <inertia
+        ixx="0.0232214605443888"
+        ixy="2.77735685273775E-08"
+        ixz="-0.000405908720123273"
+        iyy="0.0234825758483114"
+        iyz="-1.37170042841995E-07"
+        izz="0.00116342257277221" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/lower_limb_link_back_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 -0.05 -0.2"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="upper_limb_link_to_lower_limb_link_joint_back_right"
+    type="revolute">
+    <origin
+      xyz="-0.00273365306192319 -0.015 -0.403460545677347"
+      rpy="0 0 0" />
+    <parent
+      link="upper_limb_link_back_right" />
+    <child
+      link="lower_limb_link_back_right" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="${lower_lower_limb}"
+      upper="${upper_lower_limb}"
+      effort="${effort}"
+      velocity="${velocity}" />
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <!-- Back Left Limb -->
+  <link
+    name="swing_link_back_left">
+    <inertial>
+      <origin
+        xyz="0.0500000000000008 -0.0270678226112839 1.39804084625051E-15"
+        rpy="0 0 0" />
+      <mass
+        value="0.414191236384345" />
+      <inertia
+        ixx="0.000399375761932169"
+        ixy="-3.34566858876941E-19"
+        ixz="4.84338901576223E-21"
+        iyy="0.000597919401912998"
+        iyz="-9.82976664330546E-21"
+        izz="0.000452984578307331" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/swing_link_back_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="base_link_to_back_left_leg"
+    type="revolute">
+    <origin
+      xyz="-0.249773756509325 0.162876303538722 1"
+      rpy="0 0 -3.14159265358979" />
+    <parent
+      link="base_link" />
+    <child
+      link="swing_link_back_left" />
+    <axis
+      xyz="1 0 0" />
+      <limit effort="${effort}" lower="${lower_shoulder}" upper="${upper_shoulder}" velocity="${velocity}"/>
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <link
+    name="upper_limb_link_back_left">
+    <inertial>
+      <origin
+        xyz="-0.0109661719066381 0.0499999747659611 -0.195723156478281"
+        rpy="0 0 0" />
+      <mass
+        value="1.95817516519427" />
+      <inertia
+        ixx="0.0258175996818492"
+        ixy="-3.84178471719037E-08"
+        ixz="-0.00120773015606981"
+        iyy="0.0255051336123879"
+        iyz="-9.74340790329521E-10"
+        izz="0.00494126700774012" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/upper_limb_link_back_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0.05 -0.2"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="swing_link_to_upper_limb_link_joint_back_left"
+    type="revolute">
+    <origin
+      xyz="0.0500000000000016 -0.0499977343454379 0"
+      rpy="0 0 3.14159265358979" />
+    <parent
+      link="swing_link_back_left" />
+    <child
+      link="upper_limb_link_back_left" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="${lower_upper_limb}"
+      upper="${upper_upper_limb}"
+      effort="${effort}"
+      velocity="${velocity}" />
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <link
+    name="lower_limb_link_back_left">
+    <inertial>
+      <origin
+        xyz="0.0052535 0.035002 -0.1897"
+        rpy="0 0 0" />
+      <mass
+        value="1.1051" />
+      <inertia
+        ixx="0.023221"
+        ixy="2.7774E-08"
+        ixz="-0.00040591"
+        iyy="0.023483"
+        iyz="-1.3717E-07"
+        izz="0.0011634" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tachyon/meshes/lower_limb_link_back_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0.05 -0.2"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.1 0.1 0.4"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="upper_limb_link_to_lower_limb_link_joint_back_left"
+    type="revolute">
+    <origin
+      xyz="-0.0027337 0.015 -0.40346"
+      rpy="0 0 0" />
+    <parent
+      link="upper_limb_link_back_left" />
+    <child
+      link="lower_limb_link_back_left" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="${lower_lower_limb}"
+      upper="${upper_lower_limb}"
+      effort="${effort}"
+      velocity="${velocity}" />
+    <dynamics
+      damping="${damp}"
+      friction="${friction}" />
+  </joint>
+
+  <xacro:default_transmission name="base_to_front_left" joint_name="base_link_to_front_left_leg"/>
+
+  <xacro:default_transmission name="swing_link_to_upper_limb_front_left" joint_name="swing_link_to_upper_limb_link_joint_front_left"/>
+
+  <xacro:default_transmission name="upper_limb_to_lower_limb_front_left" joint_name="upper_limb_link_to_lower_limb_link_joint_front_left"/>
+
+
+  <xacro:default_transmission name="base_to_front_right" joint_name="base_link_to_front_right_leg"/>
+
+  <xacro:default_transmission name="swing_link_to_upper_limb_front_right" joint_name="swing_link_to_upper_limb_link_joint_front_right"/>
+
+  <xacro:default_transmission name="upper_limb_to_lower_limb_front_right" joint_name="upper_limb_link_to_lower_limb_link_joint_front_right"/>
+
+
+  <xacro:default_transmission name="base_to_back_left" joint_name="base_link_to_back_left_leg"/>
+
+  <xacro:default_transmission name="swing_link_to_upper_limb_back_left" joint_name="swing_link_to_upper_limb_link_joint_back_left"/>
+
+  <xacro:default_transmission name="upper_limb_to_lower_limb_back_left" joint_name="upper_limb_link_to_lower_limb_link_joint_back_left"/>
+
+  
+  <xacro:default_transmission name="base_to_back_right" joint_name="base_link_to_back_right_leg"/>
+
+  <xacro:default_transmission name="swing_link_to_upper_limb_back_right" joint_name="swing_link_to_upper_limb_link_joint_back_right"/>
+
+  <xacro:default_transmission name="upper_limb_to_lower_limb_back_right" joint_name="upper_limb_link_to_lower_limb_link_joint_back_right"/>
+
+
+
+</robot>

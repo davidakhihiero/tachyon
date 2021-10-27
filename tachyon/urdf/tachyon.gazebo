@@ -9,6 +9,87 @@
     </gazebo>
 
 
+    
+    <gazebo reference="swing_link_front_left">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>
+      </gazebo>
+    
+      <gazebo reference="upper_limb_link_front_left">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>      
+      </gazebo>
+    
+      <gazebo reference="lower_limb_link_front_left">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>      
+      </gazebo>
+
+
+
+      <gazebo reference="swing_link_front_right">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>
+      </gazebo>
+    
+      <gazebo reference="upper_limb_link_front_right">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>      
+      </gazebo>
+    
+      <gazebo reference="lower_limb_link_front_right">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>      
+      </gazebo>
+
+
+
+      <gazebo reference="swing_link_back_left">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>
+      </gazebo>
+    
+      <gazebo reference="upper_limb_link_back_left">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>      
+      </gazebo>
+    
+      <gazebo reference="lower_limb_link_back_left">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>      
+      </gazebo>
+
+
+
+      <gazebo reference="swing_link_back_right">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>
+      </gazebo>
+    
+      <gazebo reference="upper_limb_link_back_right">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>      
+      </gazebo>
+    
+      <gazebo reference="lower_limb_link_back_right">
+        <selfCollide>true</selfCollide>
+        <mu1>${mu1}</mu1>
+        <mu2>${mu2}</mu2>      
+      </gazebo>
+
+
+
     <gazebo>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
             <robotNamespace>/tachyon</robotNamespace>

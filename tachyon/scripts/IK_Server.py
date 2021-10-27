@@ -30,8 +30,8 @@ def get_joint_angles(x, y, z, L1, H1, L2, L3, thetas, right=1):
             joint_angles.append(joint_angle)
 
         # Invert theta1 and theta2 if the leg is on the left side 
-        joint_angles[1] *= right
-        joint_angles[2] *= right
+        # joint_angles[1] *= right
+        # joint_angles[2] *= right
 
         return joint_angles, True if all(np.isclose(equations(solution), [0, 0, 0])) else False
 

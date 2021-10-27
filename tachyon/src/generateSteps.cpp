@@ -22,7 +22,7 @@ std::array<std::array<float, 4>, 2> genSteps(float fullStepDistance, bool forwar
     float lift = forward == directionForward? 1: 0; // zero lift if foot is supposed to be dragged
 
     float r = fullStepDistance / 2;
-    float theta = (M_PI / 6) * 5; // 150 degrees
+    float theta = (M_PI / 6) * 4; // 120 degrees
     float d = sqrt(pow(r, 2) + pow(r, 2) - (2 * pow(r, 2) * cos(theta)));
     float h = r * cos(theta / 2);
     float b = r - (d / 2);

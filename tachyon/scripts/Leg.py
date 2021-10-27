@@ -43,13 +43,13 @@ class Leg:
 
             joint_angles.append(joint_angle)
 
-        # Invert theta1 and theta2 if the leg is on the left side 
-        joint_angles[1] *= self.right
-        joint_angles[2] *= self.right
+        # # Invert theta1 and theta2 if the leg is on the left side 
+        # joint_angles[1] *= self.right
+        # joint_angles[2] *= self.right
 
         self.theta1 = joint_angles[0]
         # Reverse theta1 and theta2 to their original values to serve as initial values for the next IK computation
-        self.theta2 = joint_angles[1] * self.right
-        self.theta3 = joint_angles[2] * self.right
+        self.theta2 = joint_angles[1] # * self.right
+        self.theta3 = joint_angles[2] # * self.right
 
         return joint_angles, True if all(np.isclose(equations(solution), [0, 0, 0])) else False

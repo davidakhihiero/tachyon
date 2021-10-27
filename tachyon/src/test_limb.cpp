@@ -11,7 +11,8 @@
 
 bool isAtDesired = false;
 int count = 0;
-float L1 = 0.13002, H1 = 0.08274, L2 = 0.39825, L3 = 0.33;
+// float L1 = 0.13002, H1 = 0.08274, L2 = 0.39825, L3 = 0.33;
+float L1 = 0.1, H1 = 0.0, L2 = 0.4, L3 = 0.4;
 
 void jointAnglesErrorCallback(const tachyon::JointAnglesErrorIsBelowTolerance::ConstPtr &msg)
 {
@@ -92,7 +93,7 @@ void test_limb()
         // swingLinkToUpperLimbBackLeftPos.data = theta2;
         // upperLimbToLowerLimbBackLeftPos.data = theta3;
 
-        angles = frontRightLeg.getJointAngles(-0.2, -0.7, 0.1);
+        angles = frontRightLeg.getJointAngles(-0.2, -0.4, 0.1);
         theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
         baseToFrontRightPos.data = theta1;

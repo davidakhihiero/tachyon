@@ -18,6 +18,7 @@ def joint_angles_error_callback(msg):
 def turn_left():
     global is_at_desired
     full_step_size = 0.20
+    L1, H1, L2, L3 = 0.1, 0, 0.4, 0.4
 
     base_to_front_left_pub = rospy.Publisher("/tachyon/joint_base_to_front_left_controller/command", Float64, queue_size=10)
     swing_link_to_upper_limb_front_left_pub = rospy.Publisher("/tachyon/joint_swing_link_to_upper_limb_front_left_controller/command", 
@@ -25,10 +26,10 @@ def turn_left():
     upper_limb_to_lower_limb_front_left_pub = rospy.Publisher("/tachyon/joint_upper_limb_to_lower_limb_front_left_controller/command", 
     Float64, queue_size=10)
 
-    front_right_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'front_right', True)
-    back_left_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'back_left', False)
-    back_right_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'back_right', True)
-    front_left_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'front_left', False)
+    front_right_leg = Leg (L1, H1, L2, L3, 'front_right', True)
+    back_left_leg = Leg (L1, H1, L2, L3, 'back_left', False)
+    back_right_leg = Leg (L1, H1, L2, L3, 'back_right', True)
+    front_left_leg = Leg (L1, H1, L2, L3, 'front_left', False)
 
     base_to_front_right_pub = rospy.Publisher("/tachyon/joint_base_to_front_right_controller/command", Float64, queue_size=10)
     swing_link_to_upper_limb_front_right_pub = rospy.Publisher("/tachyon/joint_swing_link_to_upper_limb_front_right_controller/command", 
@@ -64,7 +65,7 @@ def turn_left():
     y_values_2 = steps_diagonal_pair_2[1]
 
     for i in range(len(x_values_1)):
-        angles = front_left_leg.get_joint_angles(-x_values_1[i], y_values_1[i], 0.13002)
+        angles = front_left_leg.get_joint_angles(-x_values_1[i], y_values_1[i], L1)
         theta1, theta2, theta3 = angles[0]
 
         base_to_front_left_pos = Float64(theta1)
@@ -72,7 +73,7 @@ def turn_left():
         upper_limb_to_lower_limb_front_left_pos = Float64(theta3)
 
 
-        angles = back_right_leg.get_joint_angles(x_values_1[i], y_values_1[i], 0.13002)
+        angles = back_right_leg.get_joint_angles(x_values_1[i], y_values_1[i], L1)
         theta1, theta2, theta3 = angles[0]
 
         base_to_back_right_pos = Float64(theta1)
@@ -80,7 +81,7 @@ def turn_left():
         upper_limb_to_lower_limb_back_right_pos = Float64(theta3)
 
 
-        angles = front_right_leg.get_joint_angles(x_values_2[i], y_values_2[i], 0.13002)
+        angles = front_right_leg.get_joint_angles(x_values_2[i], y_values_2[i], L1)
         theta1, theta2, theta3 = angles[0]
 
         base_to_front_right_pos = Float64(theta1)
@@ -88,7 +89,7 @@ def turn_left():
         upper_limb_to_lower_limb_front_right_pos = Float64(theta3)
 
 
-        angles = back_left_leg.get_joint_angles(-x_values_2[i], y_values_2[i], 0.13002)
+        angles = back_left_leg.get_joint_angles(-x_values_2[i], y_values_2[i], L1)
         theta1, theta2, theta3 = angles[0]
 
         base_to_back_left_pos = Float64(theta1)
@@ -129,7 +130,7 @@ def turn_left():
         y_values_2 = steps_diagonal_pair_2[1]
 
         for i in range(len(x_values_1)):
-            angles = front_left_leg.get_joint_angles(-x_values_1[i], y_values_1[i], 0.13002)
+            angles = front_left_leg.get_joint_angles(-x_values_1[i], y_values_1[i], L1)
             theta1, theta2, theta3 = angles[0]
 
             base_to_front_left_pos = Float64(theta1)
@@ -137,7 +138,7 @@ def turn_left():
             upper_limb_to_lower_limb_front_left_pos = Float64(theta3)
 
 
-            angles = back_right_leg.get_joint_angles(x_values_1[i], y_values_1[i], 0.13002)
+            angles = back_right_leg.get_joint_angles(x_values_1[i], y_values_1[i], L1)
             theta1, theta2, theta3 = angles[0]
 
             base_to_back_right_pos = Float64(theta1)
@@ -145,7 +146,7 @@ def turn_left():
             upper_limb_to_lower_limb_back_right_pos = Float64(theta3)
 
 
-            angles = front_right_leg.get_joint_angles(x_values_2[i], y_values_2[i], 0.13002)
+            angles = front_right_leg.get_joint_angles(x_values_2[i], y_values_2[i], L1)
             theta1, theta2, theta3 = angles[0]
 
             base_to_front_right_pos = Float64(theta1)
@@ -153,7 +154,7 @@ def turn_left():
             upper_limb_to_lower_limb_front_right_pos = Float64(theta3)
 
 
-            angles = back_left_leg.get_joint_angles(-x_values_2[i], y_values_2[i], 0.13002)
+            angles = back_left_leg.get_joint_angles(-x_values_2[i], y_values_2[i], L1)
             theta1, theta2, theta3 = angles[0]
 
             base_to_back_left_pos = Float64(theta1)
@@ -193,7 +194,7 @@ def turn_left():
 
 
         for i in range(len(x_values_1)):
-            angles = front_left_leg.get_joint_angles(-x_values_1[i], y_values_1[i], 0.13002)
+            angles = front_left_leg.get_joint_angles(-x_values_1[i], y_values_1[i], L1)
             theta1, theta2, theta3 = angles[0]
 
             base_to_front_left_pos = Float64(theta1)
@@ -201,7 +202,7 @@ def turn_left():
             upper_limb_to_lower_limb_front_left_pos = Float64(theta3)
 
 
-            angles = back_right_leg.get_joint_angles(x_values_1[i], y_values_1[i], 0.13002)
+            angles = back_right_leg.get_joint_angles(x_values_1[i], y_values_1[i], L1)
             theta1, theta2, theta3 = angles[0]
 
             base_to_back_right_pos = Float64(theta1)
@@ -209,7 +210,7 @@ def turn_left():
             upper_limb_to_lower_limb_back_right_pos = Float64(theta3)
 
 
-            angles = front_right_leg.get_joint_angles(x_values_2[i], y_values_2[i], 0.13002)
+            angles = front_right_leg.get_joint_angles(x_values_2[i], y_values_2[i], L1)
             theta1, theta2, theta3 = angles[0]
 
             base_to_front_right_pos = Float64(theta1)
@@ -217,7 +218,7 @@ def turn_left():
             upper_limb_to_lower_limb_front_right_pos = Float64(theta3)
 
 
-            angles = back_left_leg.get_joint_angles(-x_values_2[i], y_values_2[i], 0.13002)
+            angles = back_left_leg.get_joint_angles(-x_values_2[i], y_values_2[i], L1)
             theta1, theta2, theta3 = angles[0]
 
             base_to_back_left_pos = Float64(theta1)
@@ -247,7 +248,7 @@ def turn_left():
                 at_desired = is_at_desired
 
        
-def generated_steps_for_a_step(full_step_distance, forward=True, x_offset=0, direction_forward=True, default_height=0.7, n_substeps=3):
+def generated_steps_for_a_step(full_step_distance, forward=True, x_offset=0, direction_forward=True, default_height=0.6, n_substeps=3):
     # function to generate x, y (x is forward/backward, y[not z due to SolidWorks axis orientation] is upward/downward) coordinates
     # for a step. A full step is travelled in "n" steps/intervals. 
     # full_step_distance: this is the diameter of a circle, where the actual step distance is the length of a segment of this circle

@@ -12,7 +12,9 @@
 
 bool isAtDesired = false;
 int count = 0;
-float L1 = 0.13002, H1 = 0.08274, L2 = 0.39825, L3 = 0.33;
+
+// float L1 = 0.13002, H1 = 0.08274, L2 = 0.39825, L3 = 0.33;
+float L1 = 0.1, H1 = 0.0, L2 = 0.4, L3 = 0.4;
 
 void jointAnglesErrorCallback(const tachyon::JointAnglesErrorIsBelowTolerance::ConstPtr &msg)
 {
@@ -22,7 +24,7 @@ void jointAnglesErrorCallback(const tachyon::JointAnglesErrorIsBelowTolerance::C
 void trot()
 {
     ros::NodeHandle nh;
-    float fullStepSize = 0.20;
+    float fullStepSize = 0.15;
 
     Leg frontLeftLeg(L1, H1, L2, L3, "front_left", false);
     Leg frontRightLeg(L1, H1, L2, L3, "front_right", true);
@@ -45,8 +47,8 @@ void trot()
     ros::Publisher swingLinkToUpperLimbBackRightPub = nh.advertise<std_msgs::Float64>("/tachyon/joint_swing_link_to_upper_limb_back_right_controller/command", 10);
     ros::Publisher upperLimbToLowerLimbBackRightPub = nh.advertise<std_msgs::Float64>("/tachyon/joint_upper_limb_to_lower_limb_back_right_controller/command", 10);
 
-    // setting default_height as 0.7m
-    float defaultHeight = 0.7;
+    // setting default_height as 0.6m
+    float defaultHeight = 0.6;
 
     // create Leg objects for each leg, specifying the leg parameters: L1, H1, L2, L3, leg_name and if the leg
     // is on the right or on the left side of tachyon and use the get_joint_angles() method to compute the

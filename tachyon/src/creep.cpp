@@ -11,7 +11,7 @@
 
 bool isAtDesired = false;
 int count = 0;
-float L1 = 0.13002, H1 = 0.08274, L2 = 0.39825, L3 = 0.33;
+float L1 = 0.1, H1 = 0.0, L2 = 0.4, L3 = 0.4;
 
 void jointAnglesErrorCallback(const tachyon::JointAnglesErrorIsBelowTolerance::ConstPtr &msg)
 {
@@ -44,8 +44,8 @@ void creep()
     ros::Publisher swingLinkToUpperLimbBackRightPub = nh.advertise<std_msgs::Float64>("/tachyon/joint_swing_link_to_upper_limb_back_right_controller/command", 10);
     ros::Publisher upperLimbToLowerLimbBackRightPub = nh.advertise<std_msgs::Float64>("/tachyon/joint_upper_limb_to_lower_limb_back_right_controller/command", 10);
 
-    // setting default_height as 0.7m
-    float defaultHeight = 0.7;
+    // setting default_height as 0.6m
+    float defaultHeight = 0.6;
 
     // create Leg objects for each leg, specifying the leg parameters: L1, H1, L2, L3, leg_name and if the leg
     // is on the right or on the left side of tachyon and use the get_joint_angles() method to compute the
@@ -70,10 +70,10 @@ void creep()
     ros::Rate rate(20);
 
     std::array<float, 3> xValsLeft = {0, fullStepSize / 2, fullStepSize / 2};
-    std::array<float, 3> yValsLeft = {-0.7, -0.7, -0.7};
+    std::array<float, 3> yValsLeft = {-defaultHeight, -defaultHeight, -defaultHeight};
 
     std::array<float, 3> xValsRight = {0, -fullStepSize / 2, -fullStepSize / 2};
-    std::array<float, 3> yValsRight = {-0.7, -0.7, -0.7};
+    std::array<float, 3> yValsRight = {-defaultHeight, -defaultHeight, -defaultHeight};
 
     int size = sizeof(xValsLeft) / sizeof(xValsLeft[0]);
     for (int i = 0;i < size;i++)
@@ -137,10 +137,10 @@ void creep()
     {
         // First phase of motion
         xValsLeft = {fullStepSize / 2, 0, -fullStepSize / 2};
-        yValsLeft = {-0.7, -0.7, -0.7};
+        yValsLeft = {-defaultHeight, -defaultHeight, -defaultHeight};
 
         xValsRight = {-fullStepSize / 2, 0, fullStepSize / 2};
-        yValsRight = {-0.7, -0.5, -0.7};
+        yValsRight = {-defaultHeight, -0.5, -defaultHeight};
 
         int size = sizeof(xValsLeft) / sizeof(xValsLeft[0]);
         for (int i = 0;i < size;i++)
@@ -201,10 +201,10 @@ void creep()
 
         // Second phase of motion
         xValsLeft = {-fullStepSize / 2, fullStepSize / 2};
-        yValsLeft = {-0.7, -0.5, -0.7};
+        yValsLeft = {-defaultHeight, -0.5, -defaultHeight};
 
         xValsRight = {fullStepSize / 2, -fullStepSize / 2};
-        yValsRight = {-0.7, -0.7, -0.7};
+        yValsRight = {-defaultHeight, -defaultHeight, -defaultHeight};
 
         size = sizeof(xValsLeft) / sizeof(xValsLeft[0]);
         for (int i = 0;i < size;i++)

@@ -18,6 +18,7 @@ def joint_angles_error_callback(msg):
 
 def stand():
     global is_at_desired, count
+    L1, H1, L2, L3 = 0.1, 0, 0.4, 0.4
 
     base_to_front_left_pub = rospy.Publisher("/tachyon/joint_base_to_front_left_controller/command", Float64, queue_size=10)
     swing_link_to_upper_limb_front_left_pub = rospy.Publisher("/tachyon/joint_swing_link_to_upper_limb_front_left_controller/command", 
@@ -44,39 +45,39 @@ def stand():
     Float64, queue_size=10)
     
 
-    # setting default_height as 0.7m
-    default_height = 0.7
+    # setting default_height as 0.6m
+    default_height = 0.6
 
     # create Leg objects for each leg, specifying the leg parameters: L1, H1, L2, L3, leg_name and if the leg
     # is on the right or on the left side of tachyon and use the get_joint_angles() method to compute the
     # inverse kinematics
 
-    front_left_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'front_left', False)
-    angles = front_left_leg.get_joint_angles(0, -default_height, 0.13002)
+    front_left_leg = Leg (L1, H1, L2, L3, 'front_left', False)
+    angles = front_left_leg.get_joint_angles(0, -default_height, L1)
     theta1, theta2, theta3 = angles[0]
 
     base_to_front_left_pos = Float64(theta1)
     swing_link_to_upper_limb_front_left_pos = Float64(theta2)
     upper_limb_to_lower_limb_front_left_pos = Float64(theta3)
 
-    front_right_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'front_right', True)
-    angles = front_right_leg.get_joint_angles(0, -default_height, 0.13002)
+    front_right_leg = Leg (L1, H1, L2, L3, 'front_right', True)
+    angles = front_right_leg.get_joint_angles(0, -default_height, L1)
     theta1, theta2, theta3 = angles[0]
 
     base_to_front_right_pos = Float64(theta1)
     swing_link_to_upper_limb_front_right_pos = Float64(theta2)
     upper_limb_to_lower_limb_front_right_pos = Float64(theta3)
 
-    back_left_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'back_left', False)
-    angles = back_left_leg.get_joint_angles(0, -default_height, 0.13002)
+    back_left_leg = Leg (L1, H1, L2, L3, 'back_left', False)
+    angles = back_left_leg.get_joint_angles(0, -default_height, L1)
     theta1, theta2, theta3 = angles[0]
 
     base_to_back_left_pos = Float64(theta1)
     swing_link_to_upper_limb_back_left_pos = Float64(theta2)
     upper_limb_to_lower_limb_back_left_pos = Float64(theta3)
 
-    back_right_leg = Leg (0.13002, 0.08274, 0.39825, 0.33, 'back_right', True)
-    angles = back_right_leg.get_joint_angles(0, -default_height, 0.13002)
+    back_right_leg = Leg (L1, H1, L2, L3, 'back_right', True)
+    angles = back_right_leg.get_joint_angles(0, -default_height, L1)
     theta1, theta2, theta3 = angles[0]
 
     base_to_back_right_pos = Float64(theta1)
