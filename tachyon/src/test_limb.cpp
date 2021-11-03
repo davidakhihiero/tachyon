@@ -93,7 +93,7 @@ void test_limb()
         // swingLinkToUpperLimbBackLeftPos.data = theta2;
         // upperLimbToLowerLimbBackLeftPos.data = theta3;
 
-        angles = frontRightLeg.getJointAngles(-0.2, -0.4, 0.1);
+        angles = frontRightLeg.getJointAngles(0.5, -0.4, 0.1);
         theta1 = angles[0], theta2 = angles[1], theta3 = angles[2];
 
         baseToFrontRightPos.data = theta1;

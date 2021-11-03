@@ -17,7 +17,7 @@ def joint_angles_error_callback(msg):
 
 def trot():
     global is_at_desired
-    full_step_size = 0.20
+    full_step_size = 0.15
     L1, H1, L2, L3 = 0.1, 0, 0.4, 0.4
 
     base_to_front_left_pub = rospy.Publisher("/tachyon/joint_base_to_front_left_controller/command", Float64, queue_size=10)
@@ -50,7 +50,7 @@ def trot():
     Float64, queue_size=10)
 
     
-    rate = rospy.Rate(50)
+    rate = rospy.Rate(5)
 
     # first move diagonal pair (1) forward half a step, (2) backward half a step
     # then move diagonal pair (2) forward a full step, then (1) backward a full step then the reverse, in a loop
@@ -264,7 +264,7 @@ def generated_steps_for_a_step(full_step_distance, forward=True, x_offset=0, dir
     lift = 1 if forward is direction_forward else 0 # zero lift if foot is supposed to be dragged
 
     r = full_step_distance / 2
-    theta = (np.pi / 6) * 5 # 150 degrees
+    theta = (np.pi / 6) * 4 # 120 degrees
     d = np.sqrt(np.power(r, 2) + np.power(r, 2) - (2 * np.power(r, 2) * np.cos(theta)))
     h = r * np.cos(theta / 2)
     b = r - (d / 2)

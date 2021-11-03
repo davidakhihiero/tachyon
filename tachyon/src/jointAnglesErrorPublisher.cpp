@@ -27,6 +27,7 @@ bool isAtDesired()
         if (errors[i] > maxError)
             maxError = errors[i];
     } 
+    ROS_INFO_STREAM((maxError));
 
     return maxError < 0.03;                  
 }

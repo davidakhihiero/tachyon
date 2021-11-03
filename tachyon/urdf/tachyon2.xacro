@@ -18,9 +18,9 @@
   <xacro:include filename="$(find tachyon)/urdf/tachyon.gazebo"/>
 
   <xacro:property name="damp" value="0.3"/>
-  <xacro:property name="friction" value="0.01"/>
+  <xacro:property name="friction" value="0.1"/>
   <xacro:property name="velocity" value="0.5"/>
-  <xacro:property name="effort" value="1000"/>
+  <xacro:property name="effort" value="1500"/>
   <xacro:property name="mu1" value="0.7"/>
   <xacro:property name="mu2" value="0.7"/>
 
